@@ -63,7 +63,7 @@ public class ChangeStatusCommande{
     else if("client".equals(scan.next())){
         System.out.println("quel status voulez-vous affecter à la commande ?");
         status = scan.next();
-        while(!status.equals("litige") && !status.equals("annulée par le client") && !status.equals("terminée")){
+        while(!status.equals("litige") && !status.equals("annulée par le client")){
             System.out.println("mauvais status, veuillez vérifier");
             status = scan.next();
         }
@@ -79,22 +79,8 @@ public class ChangeStatusCommande{
             pst.setInt(2, Timestamp.from(Instant.now()).getTime());
             pst.setString(3, id_commande);
             pst.executeUpdate();
-            //on propose de mettre une évaluation
-            System.out.println("Voulez-vous donner une évalution");
-            i
-f("non".equals(scan.next())) break;
-            System.out.prinln("note ?");
-            int note = Integer.parseInt(scan.next());
-            System.out.println("avis");
-            String avis = scan.next();
-            pst = conn.prepareStatement("Insert into Evaluation values (?, ?, ?, ?, ?);");
-            pst.setString(1, id_commande);
-            pst.setInt(2, Timestamp.from(Instant.now()).getTime());
-            pst.setString(3, avis);
-            pst.setInt(4, note);
-            pst.setString(5, id_commande);
-            pst.executeUpdate();
         }
+
     }
     pst.close();
     conn.close();
