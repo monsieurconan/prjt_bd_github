@@ -1,5 +1,6 @@
 import java.sql.*;
 import java.lang.String;
+import java.time.*;
 
 public class ChangeStatusCommande{
     
@@ -22,7 +23,7 @@ public class ChangeStatusCommande{
     conn.setAutoCommit(false);
     conn.setTransactionIsolation(conn.TRANSACTION_SERIALIZABLE);
     java.util.Scanner scan = new Scanner(System.in);
-    PrepareStatement pst = conn.prepareStatement
+    PreparedStatement pst = conn.prepareStatement
     ("Select id_commande, status from Commande Join CommmandeClient on id_commande Where (mail_resto = ? or id_client = ?);");
     System.out.println("votre id");
     String id_client_ou_resto = scan.next();
