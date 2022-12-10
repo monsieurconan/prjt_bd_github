@@ -15,7 +15,9 @@ public class Demonstrateur {
          System.out.println("Veuillez choisir une des fonctionnalités suivante :\n1- Voir commandes\2- Quitter");
          choix = scann.nextInt();
          if (choix == 1) {
-            new ChangeStatusCommande();
+            System.out.println("Veuillez indiquer votre identifiant :");
+            String id_resto = scann.nextLine();
+            new ChangeStatusRestaurant(id_resto);
          }
          else if (choix == 2) {
             System.out.println("Adios");
@@ -44,7 +46,7 @@ public class Demonstrateur {
             ("select mdp from Client where id_client = ?");
             System.out.println("Identifiant :");
             java.util.Scanner scan = new Scanner(System.in);
-            String id_client= scan.nextLine();
+            String id_client = scan.nextLine();
             pstmt.setString(1, id_client);
             ResultSet rset = pstmt.executeQuery();
             System.out.println("Mot de passe :");
@@ -55,7 +57,7 @@ public class Demonstrateur {
             }
             else {
                System.out.println("Connexion réussie\n");
-               System.out.println("Veuillez choisir une des fonctionnalités suivante :\n1- Commande\n2- Evaluation\n3- Supprimer votre compte\n4- Quitter");
+               System.out.println("Veuillez choisir une des fonctionnalités suivante :\n1- Commande\n2- Evaluation\n3- Supprimer votre compte\n4- Modifier une commande\n5- Quitter");
                choix = scann.nextInt();
                if (choix == 1) {
                   new ParcoursRestaurants();
@@ -138,6 +140,9 @@ public class Demonstrateur {
                      new DroitOubli(id_client);
                   }
                } else if (choix == 4) {
+                  new ChangeStatusClient(id_client);
+               } 
+               else if (choix == 5) {
                   System.out.println("Adios");
                } else {
                   System.out.println("Choix incorrect !");

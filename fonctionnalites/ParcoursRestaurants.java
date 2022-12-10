@@ -40,7 +40,7 @@ public class ParcoursRestaurants{
     //l'utilisateur doit terminer sa liste de commande par "fin"
     while(!categ.equals(("fin"))){
         //on verifie que categ est bien une categorie dans la liste
-        while(!toutesLesCategories.getString(2).equals(categ) || !toutesLesCategories.isAfterLast()){
+        while(!toutesLesCategories.getString(2).equals(categ) || !toutesLesCategories.next()){
             toutesLesCategories.next();
         }
         //si c'est le cas, on l'ajoute dans la liste
@@ -56,7 +56,7 @@ public class ParcoursRestaurants{
         categ = CategoriesMere.poll();
         CategoriesFille.add(categ);
         toutesLesCategories.first();
-        while(!toutesLesCategories.isAfterLast()){
+        while(!toutesLesCategories.next()){
             if(toutesLesCategories.getString(1).equals(categ)){
                 //on ajoute toutes les categories filles recursivement
                 CategoriesMere.add(toutesLesCategories.getString(2));
@@ -79,13 +79,13 @@ public class ParcoursRestaurants{
     PrepListeRestau.setString(1, condition);
     ResultSet listeRestaurant = PrepListeRestau.executeQuery();
     //on affiche tout dans le terminal
-    while(!listeRestaurant.isAfterLast()){
+    while(!listeRestaurant.next()){
         System.out.println(listeRestaurant.getString(1));
         listeRestaurant.next();
     }
     
     //on traite maintenant la selection par horaire
-    System.out.println("voulez-vous trier pour un horaire");
+    System.out.println("Voulez-vous trier pour un horaire");
     if("oui".equals(scan.nextLine())){
         System.out.println("le jour svp");
         String jourSemaine = scan.nextLine();
@@ -99,7 +99,7 @@ public class ParcoursRestaurants{
         PrepListeRestau.setInt(4, heure);
         listeRestaurant = PrepListeRestau.executeQuery();
         //on affiche tout dans le terminal
-        while(!listeRestaurant.isAfterLast()){
+        while(!listeRestaurant.next()){
             System.out.println(listeRestaurant.getString(1));
             listeRestaurant.next();
         }
@@ -107,13 +107,13 @@ public class ParcoursRestaurants{
     //consultation de la fiche d'un restaurant
     PreparedStatement ficheComplete = conn.prepareStatement
     ("select nom_resto, resto_adresse, nom_plat, prix_plat From RestAurant join Menu on mail_resto Where nom_resto = ?");
-    System.out.println("voir la fiche de ?");
+    System.out.println("Voir la fiche de ?");
     String nomResto = scan.next();
     while(!nomResto.equals("fin")){
         ficheComplete.setString(1, nomResto);
         ResultSet laFiche = ficheComplete.executeQuery();
         //ici on decidera comment traiter la fiche
-        nomResto = scan.next();
+        nomResto = scan.nextLine();
     }        
     PrepListeRestau.close();
     conn.close();
