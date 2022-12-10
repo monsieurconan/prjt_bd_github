@@ -31,11 +31,12 @@ public class ParcoursRestaurants{
     //le mdp est bon, on peut continuer
     Queue<String> CategoriesMere = new LinkedList<String>();
     //on stocke une liste des categories
-    pstmt = conn.prepareStatement
+    PreparedStatement pstmt = conn.prepareStatement
     ("select * from RelationCategorie");
     ResultSet toutesLesCategories = pstmt.executeQuery();
+    Scanner scan = new Scanner(System.in);
     System.out.println("Categories ?");
-    String categ = scan.next();
+    String categ = scan.nextLine();
     //l'utilisateur doit terminer sa liste de commande par "fin"
     while(!categ.equals(("fin"))){
         //on verifie que categ est bien une categorie dans la liste
@@ -79,17 +80,17 @@ public class ParcoursRestaurants{
     ResultSet listeRestaurant = PrepListeRestau.executeQuery();
     //on affiche tout dans le terminal
     while(!listeRestaurant.isAfterLast()){
-        System.out.println(listeRestaurant.getString(0));
+        System.out.println(listeRestaurant.getString(1));
         listeRestaurant.next();
     }
     
     //on traite maintenant la selection par horaire
     System.out.println("voulez-vous trier pour un horaire");
-    if("oui".equals(scan.next())){
+    if("oui".equals(scan.nextLine())){
         System.out.println("le jour svp");
-        String jourSemaine = scan.next();
+        String jourSemaine = scan.nextLine();
         System.out.println("l'heure svp");
-        int heure = Integer.parseInt(scan.next());
+        int heure = scan.nextInt();
         PrepListeRestau = conn.prepareStatement
         ("select nom_resto from (CategorieResto Join Restaurant on mail_resto) JOIN OuvertA on mail_resto Order by note_resto DESC and nom_resto Where ? AND WHERE jour_semaine = ? And (? Between horaire_midi_debut And horaire_midi_fin Or ? Between horaire_midi_debut And horaire_midi_fin))");
         PrepListeRestau.setString(1, condition);
@@ -115,11 +116,12 @@ public class ParcoursRestaurants{
         nomResto = scan.next();
     }        
     PrepListeRestau.close();
-    }
     conn.close();
-    } catch (SQLException e) {
+    }
+    catch (SQLException e) {
         System.err.println("failed");
         e.printStackTrace(System.err);
+        }
     }
-}   
+}
 
