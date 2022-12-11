@@ -100,3 +100,4 @@ insert into CategorieResto values('contact@mcdo.fr', 'Americain');
 insert into CategorieResto values('det@gg.fr', 'breton');
 insert into CategorieResto values('Leo.BG@julesvernes.grenoble', 'bar');
 
+commit;

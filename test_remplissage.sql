@@ -24,3 +24,5 @@ Insert into OuvertA values('contact@mcdo.fr', 1, 8, 15, 15, 22);
 Insert into TypeCommandePossible values('contact@mcdo.fr', 'livraison');
 
 insert into CategorieResto values('contact@mcdo.fr', 'Americain');
+
+commit;
