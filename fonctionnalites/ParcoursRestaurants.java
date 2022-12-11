@@ -36,12 +36,12 @@ public class ParcoursRestaurants{
     ResultSet toutesLesCategories = pstmt.executeQuery();
     Scanner scan = new Scanner(System.in);
     System.out.println("Categories ?");
-    String categ = scan.nextLine();
+    String categ = scan.next();
     //l'utilisateur doit terminer sa liste de commande par "fin"
     while(!categ.equals(("fin"))){
         //on verifie que categ est bien une categorie dans la liste
-        while(!toutesLesCategories.getString(2).equals(categ) || !toutesLesCategories.next()){
-            toutesLesCategories.next();
+        while(!toutesLesCategories.getString(2).equals(categ) || !toutesLesCategories.nextLine()){
+            toutesLesCategories.nextLine();
         }
         //si c'est le cas, on l'ajoute dans la liste
         if(toutesLesCategories.getString(2).equals(categ)) CategoriesMere.add(categ);
@@ -50,18 +50,40 @@ public class ParcoursRestaurants{
         //on met à jour categ
         categ = scan.next();
     }
+    //si la liste des catégories est vide, on la remplit avec les catégories préférées de l'utilisateur
+    if(CategoriesMere.isEmpty()){
+        PreparedStatement pstmt = conn.prepareStatement
+        ("select categorie_fille, avg(note_evaluation)  from (CategorieResto join Commande on mail_resto) join Evaluation on id_commande order by avg(note_evaluation) desc");
+        ResultSet Categoriespreferee = pstmt.executeQuery();
+        Categoriespreferee.first();
+        int i = 0;
+        while(!Categoriespreferee.isAfterLast() && i<3){
+            CategoriesMere.add(Categoriespreferee.getString(1));
+            Categoriespreferee.nextLine();
+            i++;
+        }
+    }
+    //on compte le nombre d'aretes pour prevenir des pb de boubles infinis
+    toutesLesCategories.first();
+    int limite = 0;
+    while(!toutesLesCategories.isAfterLast()){
+        toutesLesCategories.nextLine();
+        limite++;
+    }
     //on passe maintenant à la liste etendue des categories 
     Queue<String> CategoriesFille = new LinkedList<String>();
-    while(!CategoriesMere.isEmpty()){
+    int nb_arete_exploree;
+    while(!CategoriesMere.isEmpty() && nb_arete_exploree<limite){
         categ = CategoriesMere.poll();
         CategoriesFille.add(categ);
         toutesLesCategories.first();
-        while(!toutesLesCategories.next()){
+        while(!toutesLesCategories.isAfterLast()){
             if(toutesLesCategories.getString(1).equals(categ)){
                 //on ajoute toutes les categories filles recursivement
                 CategoriesMere.add(toutesLesCategories.getString(2));
+                nb_arete_exploree<limite
             }
-            toutesLesCategories.next();
+            toutesLesCategories.nextLine();
         }
     }
     pstmt.close();
@@ -79,16 +101,16 @@ public class ParcoursRestaurants{
     PrepListeRestau.setString(1, condition);
     ResultSet listeRestaurant = PrepListeRestau.executeQuery();
     //on affiche tout dans le terminal
-    while(!listeRestaurant.next()){
+    while(!listeRestaurant.isAfterLast()){
         System.out.println(listeRestaurant.getString(1));
-        listeRestaurant.next();
+        listeRestaurant.nextLine();
     }
     
     //on traite maintenant la selection par horaire
     System.out.println("Voulez-vous trier pour un horaire");
-    if("oui".equals(scan.nextLine())){
+    if("oui".equals(scan.next())){
         System.out.println("le jour svp");
-        String jourSemaine = scan.nextLine();
+        String jourSemaine = scan.next();
         System.out.println("l'heure svp");
         int heure = scan.nextInt();
         PrepListeRestau = conn.prepareStatement
@@ -99,9 +121,9 @@ public class ParcoursRestaurants{
         PrepListeRestau.setInt(4, heure);
         listeRestaurant = PrepListeRestau.executeQuery();
         //on affiche tout dans le terminal
-        while(!listeRestaurant.next()){
+        while(!listeRestaurant.isAfterLast()){
             System.out.println(listeRestaurant.getString(1));
-            listeRestaurant.next();
+            listeRestaurant.nextLine();
         }
     }
     //consultation de la fiche d'un restaurant
@@ -112,8 +134,9 @@ public class ParcoursRestaurants{
     while(!nomResto.equals("fin")){
         ficheComplete.setString(1, nomResto);
         ResultSet laFiche = ficheComplete.executeQuery();
-        //ici on decidera comment traiter la fiche
-        nomResto = scan.nextLine();
+        //ici on decide comment traiter la fiche
+        System.out.print(laFiche);
+        nomResto = scan.next();
     }        
     PrepListeRestau.close();
     conn.close();
