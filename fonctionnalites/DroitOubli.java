@@ -33,7 +33,7 @@ public class DroitOubli {
       pstmt.close();
 
       // D'abord on insère le nouveau identifiant dans la table client
-      pstmt = conn.prepareStatement("insert into client values(?, '', '', '')");
+      pstmt = conn.prepareStatement("insert into client values(?, GrenobleEats, Grenoble, Eats)");
       pstmt.setString(1, nouveau_id);
       pstmt.executeUpdate();
       pstmt.close();
